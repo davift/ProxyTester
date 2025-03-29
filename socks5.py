@@ -4,13 +4,17 @@ import concurrent.futures
 import re
 import time
 import argparse
+import os
 
+# FETCHING PROXY LISTS
 def fetch_lists():
   print("[ Fetching Proxy Lists ]", flush=True)
   with open('socks5-source.list', 'r') as file:
     lists = file.readlines()
   servers = []
+  i = 0
   for list in lists:
+    i += 1
     list = list.strip()
     try:
       response = requests.get(list)
@@ -21,6 +25,8 @@ def fetch_lists():
           servers.append(match.group(1))
     except requests.RequestException as e:
       print('☐', end='', flush=True)
+    if i % 100 == 0:
+      print("\n", end="", flush=True)
   with open('socks5-unique.list', 'w') as output_file:
     servers = sorted(set(servers))
     for server in servers:
@@ -28,37 +34,45 @@ def fetch_lists():
         output_file.write(server + '\n')
   print("", flush=True)
 
+# TESTING PROXY SERVERS
 def proxy_test(proxy):
   try:
-    response = requests.get("https://1.1.1.1/cdn-cgi/trace.json", proxies={"http": f"socks5://{proxy}", "https": f"socks5://{proxy}"}, timeout=5)
+    response = requests.get("https://1.1.1.1/cdn-cgi/trace.json", proxies={"http": f"socks5://{proxy}", "https": f"socks5://{proxy}"}, timeout=2)
     if "python-requests" in response.text:
       if response.status_code == 200:
         duration = response.elapsed.total_seconds()
-        print('■', end='', flush=True)
-        #print(f"{proxy} - {duration} seconds", flush=True)
         return proxy, duration
   except requests.RequestException as e:
     pass
-  print('☐', end='', flush=True)
   return
 
 def proxy_test_servers():
   print("[ Testing Proxy ]", flush=True)
   with open("socks5-unique.list", "r") as file:
     proxies = [line.strip() for line in file if line.strip()]
-  with concurrent.futures.ThreadPoolExecutor(max_workers=25) as executor:
-    results = list(executor.map(proxy_test, proxies))
+  results = []
+  with concurrent.futures.ThreadPoolExecutor(max_workers=(os.cpu_count()*4)) as executor:
+    for i, result in enumerate(executor.map(proxy_test, proxies), start=1):
+      results.append(result)
+      if result is not None:
+        print('■', end='', flush=True)
+      else:
+        print('☐', end='', flush=True)
+      if i % 100 == 0:
+        print("\n", end="", flush=True)
+
   working_proxies = [result for result in results if result is not None]
   working_proxies.sort(key=lambda x: x[1])
-  i = 0
+  n = 0
   print("\n  [ Lowest Latency ]", flush=True)
   with open("socks5-latency.list", "w") as output_file:
     for proxy, duration in working_proxies:
-      if i < 10:
-        i += 1
+      if n < 10:
+        n += 1
         print(f"  {proxy} ({duration:.3f}s)", flush=True)
       output_file.write(f"{proxy}\n")
 
+# SPEED TESTING
 def speed_test(proxy):
   url = "https://link.testfile.org/15MB"
   output_path = "/dev/shm/a8f5466bdf7b2411e4a0e403850a1918"
@@ -74,7 +88,9 @@ def speed_test_servers():
     proxies = file.readlines()
   proxies = proxies[:50]
   tested = []
+  i = 0
   for proxy in proxies:
+    i += 1
     proxy = proxy.strip()
     if proxy:
       start_time = time.time()
@@ -86,6 +102,8 @@ def speed_test_servers():
         tested.append((proxy, duration))
       except Exception as e:
         print('☐', end='', flush=True)
+    if i % 100 == 0:
+      print("\n", end="", flush=True)
   tested.sort(key=lambda x: x[1])
   print("\n  [ Download Duration ]", flush=True)
   with open("socks5-speed.list", "w") as output_file:
@@ -93,6 +111,7 @@ def speed_test_servers():
       print(f"  {proxy} ({duration:.3f}s)", flush=True)
       output_file.write(f"{proxy}\n")
 
+# MAIN FUNCTION
 def main():
   parser = argparse.ArgumentParser(description="Open Proxy Tester")
   parser.add_argument('--fetch', action='store_true', help='Fetch proxy lists')

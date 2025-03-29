@@ -50,7 +50,7 @@ def proxy_test_servers():
     results = list(executor.map(proxy_test, proxies))
   working_proxies = [result for result in results if result is not None]
   working_proxies.sort(key=lambda x: x[1])
-  i=0
+  i = 0
   print("\n  [ Lowest Latency ]")
   with open("socks5-latency.list", "w") as output_file:
     for proxy, duration in working_proxies:
@@ -72,6 +72,7 @@ def speed_test_servers():
   print("[ Testing Speed ]")
   with open('socks5-latency.list', 'r') as file:
     proxies = file.readlines()
+  proxies = proxies[:50]
   tested = []
   for proxy in proxies:
     proxy = proxy.strip()
@@ -80,19 +81,16 @@ def speed_test_servers():
       try:
         speed_test(proxy)
         end_time = time.time()
-        durantion = end_time - start_time
+        duration = end_time - start_time
         print('■', end='', flush=True)
-        tested.append((proxy, durantion))
+        tested.append((proxy, duration))
       except Exception as e:
         print('☐', end='', flush=True)
   tested.sort(key=lambda x: x[1])
-  i=0
-  print("\n  [ Fastest Download ]")
-  with open("socks5-latency.list", "w") as output_file:
+  print("\n  [ Download Duration ]")
+  with open("socks5-speed.list", "w") as output_file:
     for proxy, duration in tested:
-      if i < 10:
-        i += 1
-        print(f"  {proxy} ({duration:.3f}s)")
+      print(f"  {proxy} ({duration:.3f}s)")
       output_file.write(f"{proxy}\n")
 
 def main():

@@ -4,7 +4,10 @@
 
 This tool aggregates multiple proxy lists, sorts them, and filters only the unique ones. Then, it tests if they effectively work and optionally even tests their throughput.
 
-Related app https://github.com/rofl0r/proxychains-ng
+Related apps:
+
+- ProxyChains - https://github.com/rofl0r/proxychains-ng
+- FoxyProxy - https://github.com/foxyproxy/browser-extension
 
 ## Usage
 
@@ -21,7 +24,11 @@ options:
   --all       All steps: fetch, test, speed
 ```
 
-## FoxyProxy Export
+## ProxyChains Usage
+
+(pending)
+
+## FoxyProxy Export Usage
 
 Import from URL:
 

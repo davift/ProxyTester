@@ -1,6 +1,6 @@
-# open-proxy-tester
+# ProxyTester
 
-![OPT](https://github.com/davift/open-proxy-tester/blob/main/image.png)
+![OPT](https://github.com/davift/ProxyTester/blob/main/image.png)
 
 This tool aggregates multiple proxy lists, sorts them, and filters only the unique ones. Then, it tests if they effectively work and optionally even tests their throughput.
 

@@ -26,7 +26,16 @@ options:
 
 ## ProxyChains Usage
 
-(pending)
+Proxy servers are grouped as follows.
+
+- socks5-source.list
+  - A list or URLs that contains lists of proxy servers from multiple sources.
+- socks5-unique.list
+  - .
+- socks5-latency.list
+  - .
+- socks5-speed.list
+  - .
 
 ## FoxyProxy Export Usage
 

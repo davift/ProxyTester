@@ -1,0 +1,29 @@
+name: Weekly Run
+permissions:
+  contents: write
+
+on:
+  schedule:
+    - cron: '0 0 * * 5' # At 00:00 UTC on Fridays
+
+jobs:
+  weekly-run:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Run your script or command
+        run: |
+          ./socks5.py --fetch
+
+      - name: Configure Git
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+
+      - name: Commit and push changes
+        run: |
+          git add .
+          git commit -m "Automated update."
+          git push origin main

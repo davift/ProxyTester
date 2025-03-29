@@ -21,6 +21,12 @@ options:
   --all       All steps: fetch, test, speed
 ```
 
+## FoxyProxy Export
+
+Import from URL:
+
+https://github.com/davift/ProxyTester/raw/refs/heads/main/FoxyProxy.json
+
 ## Dependencies
 
 ```

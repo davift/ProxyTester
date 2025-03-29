@@ -17,6 +17,7 @@ jobs:
       - name: Run your script or command
         run: |
           ./socks5.py --all
+          ./foxyproxy-exporter.py
 
       - name: Configure Git
         run: |

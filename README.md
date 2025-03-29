@@ -4,6 +4,15 @@
 
 This tool aggregates multiple proxy lists, sorts them, and filters only the unique ones. Then, it tests if they effectively work and optionally even tests their throughput.
 
+- socks5-source.list
+  – URLs of proxy sources.
+- socks5-unique.list
+  – Unique, sorted proxy servers.
+- socks5-latency.list
+  – Servers sorted by lowest latency.
+- socks5-speed.list
+  – Top 50 servers that downloaded a 15 MB file.
+
 Related apps:
 
 - ProxyChains - https://github.com/rofl0r/proxychains-ng
@@ -26,16 +35,12 @@ options:
 
 ## ProxyChains Usage
 
-Proxy servers are grouped as follows.
+The proxy list has to be added to ProxyChains' config.
 
-- socks5-source.list
-  - A list or URLs that contains lists of proxy servers from multiple sources.
-- socks5-unique.list
-  - .
-- socks5-latency.list
-  - .
-- socks5-speed.list
-  - .
+```
+(incomolete)
+proxychains -f /etc/proxychains-socks5-list.conf firefox
+```
 
 ## FoxyProxy Export Usage
 

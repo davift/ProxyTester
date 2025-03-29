@@ -44,7 +44,7 @@ def proxy_test(proxy):
 
 def proxy_test_servers():
   print("[ Testing Proxy ]", flush=True)
-  with open("socks5-unique.list", "r", flush=True) as file:
+  with open("socks5-unique.list", "r") as file:
     proxies = [line.strip() for line in file if line.strip()]
   with concurrent.futures.ThreadPoolExecutor(max_workers=25) as executor:
     results = list(executor.map(proxy_test, proxies))

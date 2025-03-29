@@ -1,4 +1,4 @@
-name: Weekly Run
+name: Update Run
 permissions:
   contents: write
 
@@ -8,7 +8,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  weekly-run:
+  update-run:
     runs-on: self-hosted
     steps:
       - name: Checkout repository
@@ -28,3 +28,4 @@ jobs:
           git add .
           git commit -m "Automated update."
           git push origin main
+

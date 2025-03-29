@@ -6,7 +6,7 @@ import time
 import argparse
 
 def fetch_lists():
-  print("[ Fetching Proxy Lists ]")
+  print("[ Fetching Proxy Lists ]", flush=True)
   with open('socks5-source.list', 'r') as file:
     lists = file.readlines()
   servers = []
@@ -26,7 +26,7 @@ def fetch_lists():
     for server in servers:
       if not (server.startswith("0.0.0.0") or server.startswith("10.") or server.startswith("172.16.") or server.startswith("172.31.") or server.startswith("192.168.")):
         output_file.write(server + '\n')
-  print("")
+  print("", flush=True)
 
 def proxy_test(proxy):
   try:
@@ -35,7 +35,7 @@ def proxy_test(proxy):
       if response.status_code == 200:
         duration = response.elapsed.total_seconds()
         print('■', end='', flush=True)
-        #print(f"{proxy} - {duration} seconds")
+        #print(f"{proxy} - {duration} seconds", flush=True)
         return proxy, duration
   except requests.RequestException as e:
     pass
@@ -43,20 +43,20 @@ def proxy_test(proxy):
   return
 
 def proxy_test_servers():
-  print("[ Testing Proxy ]")
-  with open("socks5-unique.list", "r") as file:
+  print("[ Testing Proxy ]", flush=True)
+  with open("socks5-unique.list", "r", flush=True) as file:
     proxies = [line.strip() for line in file if line.strip()]
-  with concurrent.futures.ThreadPoolExecutor(max_workers=50) as executor:
+  with concurrent.futures.ThreadPoolExecutor(max_workers=25) as executor:
     results = list(executor.map(proxy_test, proxies))
   working_proxies = [result for result in results if result is not None]
   working_proxies.sort(key=lambda x: x[1])
   i = 0
-  print("\n  [ Lowest Latency ]")
+  print("\n  [ Lowest Latency ]", flush=True)
   with open("socks5-latency.list", "w") as output_file:
     for proxy, duration in working_proxies:
       if i < 10:
         i += 1
-        print(f"  {proxy} ({duration:.3f}s)")
+        print(f"  {proxy} ({duration:.3f}s)", flush=True)
       output_file.write(f"{proxy}\n")
 
 def speed_test(proxy):
@@ -69,7 +69,7 @@ def speed_test(proxy):
       file.write(chunk)
 
 def speed_test_servers():
-  print("[ Testing Speed ]")
+  print("[ Testing Speed ]", flush=True)
   with open('socks5-latency.list', 'r') as file:
     proxies = file.readlines()
   proxies = proxies[:50]
@@ -87,10 +87,10 @@ def speed_test_servers():
       except Exception as e:
         print('☐', end='', flush=True)
   tested.sort(key=lambda x: x[1])
-  print("\n  [ Download Duration ]")
+  print("\n  [ Download Duration ]", flush=True)
   with open("socks5-speed.list", "w") as output_file:
     for proxy, duration in tested:
-      print(f"  {proxy} ({duration:.3f}s)")
+      print(f"  {proxy} ({duration:.3f}s)", flush=True)
       output_file.write(f"{proxy}\n")
 
 def main():

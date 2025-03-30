@@ -62,12 +62,12 @@ def proxy_test_servers():
         print("\n", end="", flush=True)
   working_proxies = [result for result in results if result is not None]
   working_proxies.sort(key=lambda x: x[1])
-  n = 0
+  i = 0
   print("\n  [ Lowest Latency ]", flush=True)
   with open("socks5-latency.list", "w") as output_file:
     for proxy, duration in working_proxies:
-      if n < 10:
-        n += 1
+      i += 1
+      if i <= 10:
         print(f"  {proxy} ({duration:.3f}s)", flush=True)
       output_file.write(f"{proxy}\n")
 

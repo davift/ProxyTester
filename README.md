@@ -35,11 +35,12 @@ options:
 
 ## ProxyChains Usage
 
-The proxy list has to be added to ProxyChains' config.
+The following commands will create a new configuration file from the existing one replacing the list of servers.
 
 ```
-(incomolete)
-proxychains -f /etc/proxychains-socks5-list.conf firefox
+sed -n '/^[^#]/p' /etc/proxychains4.conf | sed '/\[ProxyList\]/q' | tee ~/proxychains-socks5-list.conf
+curl -s -f https://raw.githubusercontent.com/davift/ProxyTester/refs/heads/main/socks5-speed.list | sed -E 's/^([^:]+):([^:]+)$/socks5 \1 \2/' | tee -a ~/proxychains-socks5-list.conf
+proxychains -f ~/proxychains-socks5-list.conf curl ip.me
 ```
 
 ## FoxyProxy Export Usage

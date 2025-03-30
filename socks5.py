@@ -60,7 +60,6 @@ def proxy_test_servers():
         print('☐', end='', flush=True)
       if i % 100 == 0:
         print("\n", end="", flush=True)
-
   working_proxies = [result for result in results if result is not None]
   working_proxies.sort(key=lambda x: x[1])
   n = 0
@@ -119,7 +118,6 @@ def main():
   parser.add_argument('--speed', action='store_true', help='Speed test using proxies')
   parser.add_argument('--all', action='store_true', help='All steps: fetch, test, speed')
   args = parser.parse_args()
-
   if args.fetch:
     fetch_lists()
     exit()

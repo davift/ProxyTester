@@ -1,8 +1,11 @@
 # ProxyTester
 
+[![ProxyTester](https://healthchecks.io/b/2/6482dcfc-e68b-45fa-8cf9-5be3ca53a965.svg)](https://github.com/davift/ProxyTester) ![Static Badge](https://img.shields.io/badge/Python-3-blue?style=flat&logo=Python)
+
+
 ![OPT](https://github.com/davift/ProxyTester/blob/main/image.png)
 
-This tool aggregates multiple proxy lists, sorts them, and filters only the unique ones. Then, it tests if they effectively work and optionally even tests their throughput.
+This tool aggregates multiple proxy lists, sorts them, and filters out the duplicates. Then, it tests whether they effectively work and, optionally, also tests their throughput.
 
 - socks5-source.list
   – URLs of proxy sources.
@@ -35,7 +38,7 @@ options:
 
 ## ProxyChains Usage
 
-The following commands will create a new configuration file from the existing one replacing the list of servers.
+The following commands will create a new configuration file from the existing one, replacing the list of servers.
 
 ```
 sed -n '/^[^#]/p' /etc/proxychains4.conf | sed '/\[ProxyList\]/q' | tee ~/proxychains-socks5-list.conf

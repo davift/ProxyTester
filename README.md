@@ -1,6 +1,6 @@
 # ProxyTester
 
-[![ProxyTester](https://healthchecks.io/b/2/6482dcfc-e68b-45fa-8cf9-5be3ca53a965.svg)](https://github.com/davift/ProxyTester) ![Static Badge](https://img.shields.io/badge/Python-3-blue?style=flat&logo=Python)
+[![ProxyTester](https://healthchecks.io/b/2/6482dcfc-e68b-45fa-8cf9-5be3ca53a965.svg)](https://github.com/davift/ProxyTester) ![Static Badge](https://img.shields.io/badge/Python-blue?style=social&logo=Python)
 
 
 ![OPT](https://github.com/davift/ProxyTester/blob/main/image.png)

@@ -33,7 +33,11 @@ jobs:
       - name: Commit and push changes
         run: |
           git add .
-          git commit -m "Automated update."
-          git push origin main
+          if git diff --cached --quiet; then
+            echo "No changes to commit."
+          else
+            git commit -m "Automated update."
+            git push origin main
+          fi
           curl -m 10 --retry 3 -s https://hc-ping.com/52cadfc8-9f82-4e6c-aa12-9928330819ae
 

@@ -1,6 +1,7 @@
 #!/usr/bin/python3
 import requests
 import concurrent.futures
+import ipaddress
 import re
 import time
 import argparse
@@ -10,14 +11,13 @@ import os
 def fetch_lists():
   print("[ Fetching Proxy Lists ]", flush=True)
   with open('socks5-source.list', 'r') as file:
-    lists = file.readlines()
+    sources = [line.strip() for line in file if line.strip()]
   servers = []
   i = 0
-  for list in lists:
+  for source in sources:
     i += 1
-    list = list.strip()
     try:
-      response = requests.get(list)
+      response = requests.get(source)
       print('■', end='', flush=True)
       for line in response.text.splitlines():
         match = re.match(r'(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}:\d+)', line)
@@ -30,14 +30,17 @@ def fetch_lists():
   with open('socks5-unique.list', 'w') as output_file:
     servers = sorted(set(servers))
     for server in servers:
-      if not (server.startswith("0.0.0.0") or server.startswith("10.") or server.startswith("172.16.") or server.startswith("172.31.") or server.startswith("192.168.")):
-        output_file.write(server + '\n')
+      try:
+        if ipaddress.ip_address(server.split(':')[0]).is_global:
+          output_file.write(server + '\n')
+      except ValueError:
+        continue
   print("", flush=True)
 
 # TESTING PROXY SERVERS
 def proxy_test(proxy):
   try:
-    response = requests.get("https://1.1.1.1/cdn-cgi/trace.json", proxies={"http": f"socks5://{proxy}", "https": f"socks5://{proxy}"}, timeout=2)
+    response = requests.get("https://1.1.1.1/cdn-cgi/trace", proxies={"http": f"socks5://{proxy}", "https": f"socks5://{proxy}"}, timeout=2)
     if "python-requests" in response.text:
       if response.status_code == 200:
         duration = response.elapsed.total_seconds()
@@ -51,7 +54,7 @@ def proxy_test_servers():
   with open("socks5-unique.list", "r") as file:
     proxies = [line.strip() for line in file if line.strip()]
   results = []
-  with concurrent.futures.ThreadPoolExecutor(max_workers=(os.cpu_count()*16)) as executor:
+  with concurrent.futures.ThreadPoolExecutor(max_workers=((os.cpu_count() or 1)*16)) as executor:
     for i, result in enumerate(executor.map(proxy_test, proxies), start=1):
       results.append(result)
       if result is not None:

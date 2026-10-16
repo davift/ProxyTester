@@ -20,7 +20,7 @@ def fetch_lists():
       response = requests.get(source)
       print('■', end='', flush=True)
       for line in response.text.splitlines():
-        match = re.match(r'(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}:\d+)', line)
+        match = re.fullmatch(r'(?:socks5h?://)?(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}:\d+)', line)
         if match:
           servers.append(match.group(1))
     except requests.RequestException as e:
